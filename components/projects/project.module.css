@@ -1,0 +1,132 @@
+.app {
+  overflow: hidden;
+}
+
+/* ---------- HERO ---------- */
+
+.hero {
+  height: 100vh;
+}
+
+.heroImage {
+  object-fit: cover;
+}
+
+/* ---------- INTRO / OUTRO ---------- */
+
+.intro,
+.outro {
+  height: 100vh;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 2em;
+}
+
+.intro h1 {
+  font-family: var(--font-gravitas);
+  font-size: clamp(3rem, 5vw, 4.5rem);
+  font-weight: 400; /* Gravitas only */
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  max-width: 12ch;
+}
+
+.outro h2 {
+  font-family: var(--font-playfair);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+/* ---------- CARDS ---------- */
+
+.cards {
+  position: relative;
+}
+
+.card {
+  position: relative;
+}
+
+.card_inner {
+  width: 100%;
+  height: 100%;
+  padding: 3em;
+  display: flex;
+  gap: 4em;
+  will-change: transform;
+  border-radius: 1rem;
+}
+
+/* TEXT */
+.card_content {
+  flex: 3;
+}
+
+.card_content h2 {
+  font-family: var(--font-playfair);
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5em;
+}
+
+.card_content p {
+  font-family: var(--font-manrope);
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.6;
+  max-width: 40ch;
+}
+
+/* IMAGE */
+.card_img {
+  flex: 1;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.75em;
+  overflow: hidden;
+}
+
+/* ---------- CARD COLORS (Refined Palette) ---------- */
+
+#card-1 .card_inner {
+  background: #c9b7ff; /* softer lavender */
+}
+
+#card-2 .card_inner {
+  background: #f5f5f5; /* off-white */
+}
+
+#card-3 .card_inner {
+  background: #ffd66b; /* warmer yellow */
+}
+
+#card-4 .card_inner {
+  background: #111111;
+  color: #ffffff;
+}
+
+#card-4 .card_content p {
+  color: #d6d6d6;
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 900px) {
+  .intro h1 {
+    font-size: 2.5rem;
+  }
+
+  .card_img,
+  .card_content p {
+    display: none;
+  }
+
+  .card {
+    height: 300px;
+  }
+
+  .card_content h2 {
+    font-size: 1.5rem;
+  }
+}
