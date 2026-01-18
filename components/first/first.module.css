@@ -4,6 +4,7 @@
   width: 100vw;
   display: flex;
   align-items: center;
+  overflow: hidden;
 }
 
 .inner {
@@ -11,7 +12,6 @@
   max-width: 1400px;
   height: 100%;
   margin: 0 auto;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -24,39 +24,75 @@
   justify-content: center;
 }
 
+/* Intro */
 .intro {
   font-size: 14px;
   color: #777;
   margin-bottom: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.left h1 {
+/* NAME */
+.name {
   font-size: clamp(48px, 6vw, 72px);
-  line-height: 1.05;
   font-weight: 700;
-  letter-spacing: -1.5px;
-  margin-bottom: 40px;
+  line-height: 1.30; /* tighter */
+  letter-spacing: -0.03em;
+  margin-bottom: 48px;
+  color: #000;
 }
 
+/* Text Masking */
+.lineMask {
+  display: block;
+  overflow: hidden;
+}
+
+/* Pull second line closer */
+.name .lineMask:not(:first-child) {
+  margin-top: -0.15em;
+}
+
+.line {
+  display: inline-block;
+}
+
+/* Scroll */
 .scroll {
   font-size: 13px;
   color: #111;
   text-decoration: none;
+  font-weight: 800;
+  text-transform: uppercase;
+  border-bottom: 1px solid #111;
+  width: fit-content;
+  padding-bottom: 4px;
 }
 
+/* RIGHT IMAGE */
 .right {
   width: 45%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-right: 20%;
-
+  padding-right: 5%;
 }
 
-.right img {
+.imageMask {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+}
+
+.imageScale {
+  display: block;
   max-height: 70vh;
   width: auto;
+  height: auto;
+  object-fit: cover;
 }
 
 /* Responsive */
@@ -67,12 +103,18 @@
     text-align: center;
   }
 
-  .right {
-    margin-top: 40px;
-    width: 100%;
+  .left {
+    align-items: center;
+    margin-bottom: 2rem;
   }
 
-  .right img {
-    max-height: 50vh;
+  .right {
+    width: 100%;
+    padding-right: 0;
+    height: auto;
+  }
+
+  .imageScale {
+    max-height: 40vh;
   }
 }
