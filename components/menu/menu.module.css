@@ -1,6 +1,5 @@
 /* components/menu/menu.module.css */
 
-/* Basic reset for links and p tags within the menu context */
 .menu_container a,
 .menu_container p {
   text-decoration: none;
@@ -19,8 +18,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 10; /* Above page content, below overlay */
-  mix-blend-mode: difference; /* Makes logo visible on white or black bg */
+  z-index: 50; 
+  mix-blend-mode: difference;
+  /* Removal of transition: transform here allows GSAP to take full control smoothly */
+  will-change: transform;
 }
 
 .menu_logo h1 {
@@ -28,6 +29,7 @@
   font-size: 20px;
   color: #fff;
   cursor: pointer;
+  margin: 0;
 }
 
 .menu_open {
@@ -49,25 +51,22 @@
   width: 100vw;
   height: 100vh;
   padding: 2em;
-  background-color: #c5fb45; /* A trendy acid green/yellow */
-  z-index: 20;
+  background-color: #c5fb45; 
+  z-index: 60; /* Higher than menu_bar */
   display: flex;
   flex-direction: column;
-  /* Initial State for GSAP: Hidden */
   clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%); 
 }
 
-/* Overlay Top Bar */
 .menu_overlay_bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding-bottom: 2em;
 }
 
 .menu_overlay_bar .menu_logo h1 {
-  color: #000; /* Dark text on the light overlay */
+  color: #000; 
 }
 
 .menu_close {
@@ -80,84 +79,89 @@
   font-weight: 500;
 }
 
-/* Main Content Area */
+/* Main Content Area - FIXED LAYOUT */
 .menu_copy {
   flex: 1;
   display: flex;
-  flex-direction: row; /* Side by side on desktop */
+  flex-direction: row; 
   justify-content: space-between;
-  align-items: flex-end;
-  padding-top: 2em;
+  align-items: flex-end; /* Keeps info at the bottom */
+  padding-bottom: 2em; /* Added breathing room at the bottom */
 }
 
-/* Links Container */
 .menu_links {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0; /* Tighten gap for editorial look */
 }
 
-/* THE REVEAL MAGIC: Parent hides overflow, child moves */
 .menu_link_item {
   width: max-content;
-  overflow: hidden; /* Essential for text reveal */
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+  overflow: hidden; 
 }
 
 .menu_link_item_holder {
   position: relative;
   display: block;
-  transform: translateY(100%); /* Start pushed down */
 }
 
 .menu_link {
   font-family: var(--font-playfair);
-  font-size: 8vw; /* Responsive huge text */
+  font-size: clamp(40px, 8vw, 120px); /* Better scaling */
   font-weight: 400;
-  line-height: 100%;
+  line-height: 0.9;
   color: #000;
-  transition: letter-spacing 0.3s ease;
+  transition: letter-spacing 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .menu_link:hover {
-  letter-spacing: 10px; /* Slight expansion on hover */
+  letter-spacing: 0.05em; 
 }
 
-/* Footer Info inside Menu */
+/* Footer Info Section - FIXED OVERLAP */
 .menu_info {
   display: flex;
   gap: 4em;
+  padding-bottom: 0.5em;
 }
 
 .menu_info_col {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
 }
 
 .menu_info_col a,
 .menu_info_col p {
   font-family: var(--font-manrope);
-  font-size: 14px;
+  font-size: 12px;
   color: #000;
-  font-weight: 500;
+  font-weight: 600;
+  opacity: 0.8;
 }
 
-/* Mobile Responsiveness */
+.menu_info_col a:hover {
+    opacity: 1;
+}
+
+/* Mobile Responsiveness - VERTICAL STACK */
 @media (max-width: 900px) {
   .menu_copy {
     flex-direction: column;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: flex-start;
+    padding-top: 4em;
   }
   
   .menu_link {
     font-size: 14vw;
+    line-height: 1.1;
   }
 
   .menu_info {
     width: 100%;
-    justify-content: space-between;
-    margin-top: 2em;
+    margin-top: auto; /* Pushes info to bottom of mobile screen */
+    gap: 2em;
+    padding-bottom: 2em;
   }
 }

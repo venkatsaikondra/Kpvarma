@@ -1,9 +1,12 @@
 "use client"
 import React, { useState, useRef, useEffect } from 'react'
-import Styles from './menu.module.css' // Import from local file
+import Styles from './menu.module.css'
 import Link from 'next/link'
 import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger' // Import ScrollTrigger
 import { useGSAP } from '@gsap/react'
+
+gsap.registerPlugin(ScrollTrigger); // Register the plugin
 
 const menuLinks = [
     { path: '/', label: "Home" },
@@ -16,20 +19,36 @@ const menuLinks = [
 
 const Menu = () => {
     const container = useRef(null);
+    const menuBar = useRef(null); // Ref for the top bar
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    
-    // Rename t1 to tl (timeline) for convention
     const tl = useRef(null);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
+    // --- NEW: Scroll to Hide/Show Logic ---
     useGSAP(() => {
-        // 1. Set initial state of the links (pushed down)
-        gsap.set(`.${Styles.menu_link_item_holder}`, { y: "100%" });
+        const showAnim = gsap.from(menuBar.current, { 
+            yPercent: -100,
+            paused: true,
+            duration: 0.3,
+            ease: "power2.out"
+        }).progress(1);
 
-        // 2. Create the timeline
+        ScrollTrigger.create({
+            start: "top top",
+            end: "max",
+            onUpdate: (self) => {
+                // If scrolling down, hide; if up, show
+                self.direction === 1 ? showAnim.reverse() : showAnim.play();
+            }
+        });
+    }, { scope: container });
+
+    // --- Existing Menu Overlay Logic ---
+    useGSAP(() => {
+        gsap.set(`.${Styles.menu_link_item_holder}`, { y: "100%" });
         tl.current = gsap.timeline({ paused: true });
 
         tl.current
@@ -43,9 +62,8 @@ const Menu = () => {
                 duration: 1,
                 stagger: 0.1,
                 ease: "power4.out",
-                delay: -0.75, // Overlap animation
+                delay: -0.75,
             });
-            
     }, { scope: container });
 
     useEffect(() => {
@@ -58,8 +76,8 @@ const Menu = () => {
 
     return (
         <div className={Styles.menu_container} ref={container}>
-            {/* Top Bar (Always Visible) */}
-            <div className={Styles.menu_bar}>
+            {/* Added ref={menuBar} here */}
+            <div className={Styles.menu_bar} ref={menuBar}>
                 <div className={Styles.menu_logo}>
                     <Link href="/"><h1>KPVARMA</h1></Link>
                 </div>
@@ -68,7 +86,6 @@ const Menu = () => {
                 </div>
             </div>
 
-            {/* Full Screen Overlay */}
             <div className={Styles.menu_overlay}>
                 <div className={Styles.menu_overlay_bar}>
                     <div className={Styles.menu_logo}>
@@ -97,8 +114,6 @@ const Menu = () => {
                             <a href="#">X &#8599;</a>
                             <a href="#">Instagram &#8599;</a>
                             <a href="#">LinkedIn &#8599;</a>
-                            <a href="#">Behance &#8599;</a>
-                            <a href="#">Dribbble &#8599;</a>
                         </div>
                         <div className={Styles.menu_info_col}>
                             <p>info@venkat.com</p>

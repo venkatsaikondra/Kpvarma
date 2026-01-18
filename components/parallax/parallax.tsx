@@ -1,77 +1,54 @@
 "use client"
-import {ReactLenis} from '@studio-freight/react-lenis';
-import ParallexImage from '@/components/parallax/paralleximage';
 import React from 'react'
-import Styles from '@/components/parallax/parallax.module.css'
-const parallax = () => {
+import { ReactLenis } from '@studio-freight/react-lenis'
+import ParallaxImage from '@/components/parallax/paralleximage' // Ensure filename matches exactly
+import Styles from './parallax.module.css'
+
+const Parallax = () => {
   return (
-    <div className={Styles.app}>
-      <section className={Styles.hero}>
-        <div className={Styles.img}>
-            <ParallexImage src="/potrait1.jpg" alt="" />
-        </div>
-      </section>
-      <section className={Styles.projects}>
-         <div className={Styles.img}>
-            <ParallexImage src="/potrait2.jpg" alt="" />
-        </div>
-        <div className={Styles.projects_brief}>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum ea dolore praesentium asperiores ducimus, sed, quos dolorem blanditiis ipsam aliquam voluptatem ullam a, sint quod!.
-            </p>
-        </div>
-        <div className={Styles.col_projects_cover}>
-            <div className={Styles.img}>
-                <ParallexImage src="/potrait3.jpg" alt="" />
-            </div>
-        </div>
-        <div className={Styles.col_projects_list}>
-            <div className={Styles.project}>
-                <h1>Sunrise</h1>
-                <p>Apple music/ Spotify/ Youtube</p>
-            </div>
-            <div className={Styles.project}>
-                <h1>Echoes Within</h1>
-                <p>Apple music/ Spotify/ Youtube</p>
-            </div>
-            <div className={Styles.project}>
-                <h1>Fading Memories</h1>
-                <p>Apple music/ Spotify/ Youtube</p>
-            </div>
-            <div className={Styles.project}>
-                <h1>Shadow's Edge</h1>
-                <p>Apple music/ Spotify/ Youtube</p>
-            </div>
-        </div>
-      </section>
-      <section className={Styles.about}>
-        <div className={Styles.col_intro}>
-            <p>Introduction</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas blanditiis perspiciatis nihil facere quo optio temporibus cum similique. Vitae ipsum, harum nostrum nobis alias delectus porro! Quod maxime libero odio?</p>
-        </div>
-        <div className='Styles.col_portrait'>
-            <div className='Styles.portrait_container'>
-                <div className='Styles.img'>
-                    <ParallexImage src="/potrait4.jpg" alt="" />
+    <ReactLenis root>
+        <div className={Styles.app}>
+            <section className={Styles.hero}>
+                <ParallaxImage src="/potrait1.jpg" alt="Hero Portrait" />
+            </section>
+
+            <section className={Styles.projects}>
+                <div className={Styles.col_projects_cover}>
+                    <ParallaxImage src="/potrait2.jpg" alt="Project Cover" />
                 </div>
-            </div>
+                
+                <div className={Styles.projects_brief}>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit...
+                    </p>
+                </div>
+
+                <div className={Styles.col_projects_list}>
+                    <div style={{ width: '100%', height: '300px', marginBottom: '2em', position: 'relative' }}>
+                         <ParallaxImage src="/potrait3.jpg" alt="Detail" />
+                    </div>
+
+                    <div className={Styles.project}>
+                        <h1>Sunrise</h1>
+                        <p>Apple music / Spotify / Youtube</p>
+                    </div>
+                    {/* ... rest of your projects */}
+                </div>
+            </section>
+
+            {/* Ensure the About section uses the correct Styles object */}
+            <section className={Styles.about}>
+                <div className={Styles.col_intro}>
+                    <p>Introduction</p>
+                    <p>Lorem ipsum dolor sit amet...</p>
+                </div>
+                <div className={Styles.col_portrait}>
+                     <ParallaxImage src="/potrait4.jpg" alt="About Portrait" />
+                </div>
+            </section>
         </div>
-      </section>
-      <section className={Styles.banner}>
-        <div className={Styles.img}>
-            <ParallexImage src="/potrait5.jpg" alt="" />
-        </div>
-        <div className={Styles.banner_copy}>
-            <p>Be the</p>
-            <h1>First to know</h1>
-            <p>
-                Want to hear the latest news on my upcoming music releases , touring and march?
-            </p>
-            <button>Join the newsletter</button>
-        </div>
-      </section>
-    </div>
+    </ReactLenis>
   )
 }
 
-export default parallax
+export default Parallax

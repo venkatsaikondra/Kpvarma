@@ -1,57 +1,48 @@
 "use client"
-import React,{useRef,useEffect} from 'react'
-import { useLenis } from '@studio-freight/react-lenis/types'
-const lerp=(start,end,factor)=>start+(end-start)*factor;
-const paralleximage = ({src,alt}) => {
-    const imgRef=useRef(null);
-    const bounds=useRef(null);
-    const currentTranslateY=useRef(0);
-    const targetTranslateY=useRef(0);
-    const refId=useRef(null);
-    useEffect(()=>{
-        const updateBounds=()=>{
-            if(imgRef.current){
-                const react=imgRef.current.getBoundingClientRect();
-                bounds.current={
-                    top:react.top+window.scrollY,
-                    bottom:react.bottom+window.scrollY,
+import React, { useRef } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGSAP } from '@gsap/react'
+import Styles from './parallax.module.css'
+
+// Register plugins to ensure they work
+gsap.registerPlugin(ScrollTrigger);
+
+const ParallaxImage = ({ src, alt = "image" }) => {
+    const containerRef = useRef(null);
+    const imgRef = useRef(null);
+
+    useGSAP(() => {
+        // The Parallax Logic
+        // We move the image on the Y axis from -15% to 15% 
+        // as the container moves across the viewport.
+        gsap.fromTo(imgRef.current, 
+            {
+                y: "-15%", // Start position (pulled up)
+            },
+            {
+                y: "15%", // End position (pushed down)
+                ease: "none", // Linear movement is best for parallax
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top bottom", // When container top enters viewport bottom
+                    end: "bottom top", // When container bottom leaves viewport top
+                    scrub: true, // Link animation progress to scrollbar
                 }
             }
-        }
-        updateBounds();
-        window.addEventListener("resize",update);
-        const animate=()=>{
-            if(imgRef.current){
-                currentTranslateY.current=lerp(
-                    currentTranslateY.current,
-                    targetTranslateY.current,
-                    0.1
-                );
-                if(Math.abs(currentTranslateY.current-targetTranslateY.current>0.01){
-                    imgRef.current.style.transform=`translateY(${currentTranslateY.current}px) scale(1.25)`
-                }
-                )
+        );
+    }, { scope: containerRef });
 
-            }
-            refId.current=requestAnimationFrame(animate)
-        }
-        animate();
-        return()=>{
-            window.removeEventListener("resize",updateBounds);
-            if(refId.current){
-                cancelAnimationFrame(refId.current);
-            }
-        }
-    },[])
-    useLenis(({scroll})=>{
-        if(!bounds.current) return;
-        const relativeScroll=scroll-bounds.current.top;
-        targetTranslateY.current=relativeScroll*0.2;
-    })
-
-  return (
-    <img ref={imgRef} src={src} alt={alt} style={{willChange:"transform",transform:"translateY(0) scale(1.25)"}} />
-  )
+    return (
+        <div className={Styles.img_container} ref={containerRef}>
+            <img 
+                ref={imgRef} 
+                src={src} 
+                alt={alt} 
+                className={Styles.parallax_img} 
+            />
+        </div>
+    )
 }
 
-export default paralleximage
+export default ParallaxImage
