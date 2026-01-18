@@ -1,126 +1,207 @@
-img{
-    position: absolute;
+/* components/parallax/parallax.module.css */
+
+/* Global Reset for this component */
+.app p, .app h1, .app a {
+    margin: 0;
+    padding: 0;
+}
+
+.app {
+    width: 100%;
+    overflow-x: hidden;
+    background-color: #0f0f0f; /* Dark background base */
+}
+
+/* Reusable Image Container (The Mask) */
+.img_container {
+    position: relative;
     width: 100%;
     height: 100%;
+    overflow: hidden; /* Essential for parallax */
+}
+
+/* The Image itself */
+.parallax_img {
+    position: absolute;
+    top: -20%; /* Start slightly above */
+    left: 0;
+    width: 100%;
+    height: 140%; /* Taller than container for movement room */
     object-fit: cover;
     will-change: transform;
-
 }
-.img{
+
+/* -- HERO SECTION -- */
+.hero {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* -- PROJECTS SECTION -- */
+.projects {
+    position: relative;
+    width: 100vw;
+    min-height: 100vh; /* Allow it to grow */
+    padding: 10vh 5vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4em;
+    align-items: center;
+}
+
+/* Image styling within grid */
+.projects .img_container {
+    height: 60vh; /* Fixed height for consistency */
+}
+
+/* Floating Brief Text */
+.projects_brief {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    width: 300px;
+    color: #dbccc0;
+    mix-blend-mode: difference; /* Cool effect over images */
+    text-align: center;
+    pointer-events: none;
+}
+
+.projects_brief p {
+    font-size: 14px;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+.col_projects_list {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    justify-content: center;
+}
+
+.project h1 {
+    font-family: sans-serif;
+    font-size: 4vw;
+    color: #dbccc0;
+    margin-bottom: 0.2em;
+}
+
+.project p {
+    color: #666;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+/* -- ABOUT SECTION -- */
+.about {
+    display: flex;
+    min-height: 80vh;
+    background-color: #68461f;
+    color: #dbccc0;
+}
+
+.col_intro {
+    flex: 1;
+    padding: 4em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2em;
+}
+
+.col_intro p:first-child {
+    text-decoration: underline;
+    font-size: 12px;
+}
+
+.col_intro p:last-child {
+    font-size: 24px;
+    line-height: 1.4;
+    max-width: 80%;
+}
+
+.col_portrait {
+    flex: 1;
+    position: relative;
+}
+
+.col_portrait .img_container {
+    height: 100%;
+}
+
+/* -- BANNER SECTION -- */
+.banner {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Background image for banner needs to fill absolute */
+.banner .img_container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    z-index: 0;
 }
-h1{
-    color:#dbccc0;
-    font-family: sans-serif;
-    font-size: 80px;
-    font-weight: 400;
-    letter-spacing: -1px;
-    line-height: 1;
-}
-p{
-    text-transform: uppercase;
+
+.banner_copy {
+    position: relative;
+    z-index: 1;
+    text-align: center;
     color: #dbccc0;
-    font-size: 14px;
-    font-weight: 500;
+}
+
+.banner_copy h1 {
+    font-size: 8vw;
     line-height: 1;
-}
-button{
-    border: none;
-    outline: none;
-    text-transform: none;
-    font-size: 12px;
-    font-weight: 600;
-    margin: 0.25em 0;
-    padding: 0.3em 0.75em 0.25em 0.75em;
-    color: #0f0f0f;
-    background-color: #dbccc0;
-    border-radius: 2em;
-}
-section{
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-}
-section projects{
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    gap: 10em;
-}
-.projects_brief{
-    position: absolute;
-    width: 25%;
-    top:35%;
-    left: 35%;
-    transform: translate(-50%,-50%);
-    z-index: 2;
-}
-.projects_col{
-    position: relative;
-}
-.col.project_cover{
-    flex:1;
-    height:50%;
-}
-.col.project_list{
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2em;
-}
-.projects{
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-}
-.about{
-    display: flex;
-    background-color: #68461f;
-}
-.intro .potrait{
-    position: relative;
-    flex:1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1em;
-}
-.intro p{
-    width:50%;
-    text-align: center;
-}
-.intro p:nth-child(1){
-    text-decoration: underline;
-    margin-bottom: 0.5em;
-}
-.potrait .potrait_container{
-    position:relative;
-    width: 100%;
-    height: 100%;
-}
-.banner{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.banner_copy{
-    position: relative;
-    text-align: center;
-}
-.banner_copy h1{
     text-transform: uppercase;
+    margin: 10px 0;
 }
-.bnner p:nth-child(3){
-    width: 75%;
-    margin: 1em auto;
+
+.banner_copy button {
+    margin-top: 2em;
+    padding: 1em 2em;
+    border-radius: 50px;
+    border: none;
+    background: #dbccc0;
+    color: #0f0f0f;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.banner_copy button:hover {
+    transform: scale(1.05);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .projects {
+        grid-template-columns: 1fr;
+        padding: 2em;
+    }
+    .projects_brief {
+        position: relative;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: 100%;
+        margin: 2em 0;
+        mix-blend-mode: normal;
+    }
+    .about {
+        flex-direction: column-reverse;
+    }
+    .col_portrait {
+        height: 50vh;
+    }
 }

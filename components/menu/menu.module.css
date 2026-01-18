@@ -1,0 +1,163 @@
+/* components/menu/menu.module.css */
+
+/* Basic reset for links and p tags within the menu context */
+.menu_container a,
+.menu_container p {
+  text-decoration: none;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+}
+
+/* Navbar (The bar always visible) */
+.menu_bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  padding: 2em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10; /* Above page content, below overlay */
+  mix-blend-mode: difference; /* Makes logo visible on white or black bg */
+}
+
+.menu_logo h1 {
+  font-family: var(--font-gravitas);
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.menu_open {
+  cursor: pointer;
+}
+
+.menu_open p {
+  font-family: var(--font-manrope);
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+}
+
+/* The Full Screen Overlay */
+.menu_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: 2em;
+  background-color: #c5fb45; /* A trendy acid green/yellow */
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  /* Initial State for GSAP: Hidden */
+  clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%); 
+}
+
+/* Overlay Top Bar */
+.menu_overlay_bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 2em;
+}
+
+.menu_overlay_bar .menu_logo h1 {
+  color: #000; /* Dark text on the light overlay */
+}
+
+.menu_close {
+  cursor: pointer;
+}
+
+.menu_close p {
+  font-family: var(--font-manrope);
+  color: #000;
+  font-weight: 500;
+}
+
+/* Main Content Area */
+.menu_copy {
+  flex: 1;
+  display: flex;
+  flex-direction: row; /* Side by side on desktop */
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 2em;
+}
+
+/* Links Container */
+.menu_links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* THE REVEAL MAGIC: Parent hides overflow, child moves */
+.menu_link_item {
+  width: max-content;
+  overflow: hidden; /* Essential for text reveal */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+
+.menu_link_item_holder {
+  position: relative;
+  display: block;
+  transform: translateY(100%); /* Start pushed down */
+}
+
+.menu_link {
+  font-family: var(--font-playfair);
+  font-size: 8vw; /* Responsive huge text */
+  font-weight: 400;
+  line-height: 100%;
+  color: #000;
+  transition: letter-spacing 0.3s ease;
+}
+
+.menu_link:hover {
+  letter-spacing: 10px; /* Slight expansion on hover */
+}
+
+/* Footer Info inside Menu */
+.menu_info {
+  display: flex;
+  gap: 4em;
+}
+
+.menu_info_col {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.menu_info_col a,
+.menu_info_col p {
+  font-family: var(--font-manrope);
+  font-size: 14px;
+  color: #000;
+  font-weight: 500;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 900px) {
+  .menu_copy {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  
+  .menu_link {
+    font-size: 14vw;
+  }
+
+  .menu_info {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 2em;
+  }
+}
