@@ -5,7 +5,18 @@
   padding: 0;
   box-sizing: border-box;
 }
+/* Allow the custom animation to take over */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
 
+/* Ensure the HTML doesn't overflow during transition */
+html {
+  view-transition-name: root;
+  overflow-x: hidden;
+}
 html,
 body {
   width: 100%;

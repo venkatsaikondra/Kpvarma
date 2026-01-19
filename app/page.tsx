@@ -7,7 +7,7 @@ import Photography from '@/components/photography/photography'
 import Parallax from '@/components/parallax/parallax'
 import Scroll from '@/components/scroll/scroll'
 import Footer from '@/components/footer/footer'
-
+import Text from '@/components/text/text'
 export default function Home() {
   return (
     <div>
@@ -19,6 +19,7 @@ export default function Home() {
       <Photography/>
       <Parallax/>
       <Scroll/>
+      <Text/>
       <Footer/>
     </div>
   );

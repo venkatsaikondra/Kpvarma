@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { ViewTransitions } from 'next-view-transitions';
 import "./globals.css";
-import Menu from '@/components/menu/menu'
-import Chat from '@/components/chat/chat'
+import Menu from '@/components/menu/menu';
+import Chat from '@/components/chat/chat';
 import {
   Gravitas_One,
   Manrope,
@@ -45,9 +46,14 @@ export default function RootLayout({
           ${playfair.variable}
         `}
       >
-        <Menu/>
-        {children}
-        <Chat/>
+        {/* The opening tag must go here, wrapping the Menu and Children */}
+        <ViewTransitions>
+          <Menu />
+        </ViewTransitions>
+          {children}
+       
+        
+        <Chat />
       </body>
     </html>
   );

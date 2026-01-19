@@ -110,12 +110,6 @@ export default function Projects() {
   return (
     <ReactLenis root>
       <div className={styles.app} ref={container}>
-        {/* Intro Section */}
-        <section className={styles.intro} ref={introRef}>
-          <h1 className={styles.introTitle} style={{ textAlign: "center" }}>
-            Creating standout brands for startups that bring joy and leave a lasting impression.
-          </h1>
-        </section>
 
         {/* Cards Section */}
         <section className={styles.cards}>
