@@ -1,117 +1,101 @@
 "use client"
-import React from 'react'
+import React, { useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import { useGSAP } from '@gsap/react'
-import { useRef } from 'react'
-gsap.registerPlugin(ScrollTrigger,SplitText);
 
-const AnimatedCopy = ({children,colorInitial='#dddddd',colorAccent='abff02',colorFinal="#000000"}) => {
-    const splitRef=useRef([])
-    const lastScrollProgress=useRef(0);
-    const colorTransitionTimers=useRef(new Map())
-    const completedChars=useRef(new Set())
-    const containerRef=useRef(null);
-    useGSAP(()=>{
-        if(!containerRef.current){
-            return;
-        }
-        splitRef.current=[];
-        lastScrollProgress.current=0;
-        colorTransitionTimers.current.clear();
-        completedChars.current.clear();
-        let elements=[];
-        if(containerRef.current.hasAttribute("data_copy_wrapper")){
-            elements=Array.from(containerRef.current.children);
-        }
-        else{
-            elements=[containerRef.current]
-        }
-        elements.forEach((elements)=>{
-            const wordSplit=SplitText.create(element,{
-                type:"words",
-                wordsClass:"word",
-            })
-            const charSplit=SplitText.create(wordSplit.words,{
-                type:"chars",
-                charsClass:"char",
-            })
-            splitRef.current.push({wordSplit,charSplit});
+gsap.registerPlugin(ScrollTrigger, SplitText);
+
+const AnimatedCopy = ({ children, colorInitial = '#444444', colorAccent = '#abff02', colorFinal = '#ffffff' }) => {
+    const containerRef = useRef(null);
+    const splitRefs = useRef([]);
+    const lastScrollProgress = useRef(0);
+    const colorTransitionTimers = useRef(new Map());
+    const completedChars = useRef(new Set());
+
+    useGSAP(() => {
+        if (!containerRef.current) return;
+
+        // Cleanup previous splits
+        splitRefs.current.forEach(split => {
+            split.charSplit.revert();
+            split.wordSplit.revert();
         });
-        const allChars=splitRefs.current.flatMap((
-            {charSplit}
-        )=>charSplit.chars);
-        gsap.set(allChars,{color:colorInitial});
+        
+        splitRefs.current = [];
+        completedChars.current.clear();
 
-        const sheduletFinalTransition=(char,index)=>{
-            if(colorTransitionTimers.current.get(index));
-        }
-        const timer=setTimeout(()=>{
-            if(!completedChars.current.has(index)){
-                gsap.to(char,{
-                    duration:0.1,
-                    ease:"none",
-                    color:"colorFinal",
-                    onComplete:()=>{
-                        completedChars.current.add(index);
-                    }
-                })
-            }
-            colorTransitionTimers.current.delete(index);
-        },100);
-        colorTransitionTimers.current.set(index,timer);
-    },
-    ScrollTrigger.create({
-        trigger:containerRef.current,
-        start:"top:90%",
-        end:"top 10%",
-        scrub:1,
-        onUpdate:(self)=>{
-            const progress=self.progress;
-            const totalChars=allChars.lenth;
-            const isScrollingDown=progress>=lastScrollProgress.current;
-            const currentCharIndex=Math.floor(progress*totalChars);
+        const elements = containerRef.current.hasAttribute("data-copy-wrapper")
+            ? Array.from(containerRef.current.children)
+            : [containerRef.current];
 
-            allChars.array.forEach((char,index) => {
-                if(!isScrollingDown && index >=currentCharIndex){
-                    if(colorTransitionTimers.current.has(index)){
-                        clearTimeout(colorTransitionTimers.current.get(index));
-                        colorTransitionTimers.current.delete(index);
-                    }
-                    completedChars.current.delete(index);
-                    gsap.set(char,{color:colorInitial});
-                    return;
+        elements.forEach((element) => {
+            const wordSplit = new SplitText(element, { type: "words", wordsClass: "word" });
+            const charSplit = new SplitText(wordSplit.words, { type: "chars", charsClass: "char" });
+            splitRefs.current.push({ wordSplit, charSplit });
+        });
+
+        const allChars = splitRefs.current.flatMap(({ charSplit }) => charSplit.chars);
+        gsap.set(allChars, { color: colorInitial });
+
+        const scheduleFinalTransition = (char, index) => {
+            if (colorTransitionTimers.current.has(index)) return;
+
+            const timer = setTimeout(() => {
+                if (!completedChars.current.has(index)) {
+                    gsap.to(char, {
+                        duration: 0.4,
+                        color: colorFinal,
+                        ease: "power2.out",
+                        onComplete: () => completedChars.current.add(index)
+                    });
                 }
-                if(completedChars.current.has(index)){
-                    return;
-                }
-                if(index<=currentCharIndex){
-                    gsap.set(char,{color:colorAccent});
-                    if(!colorTransitionTimers.current.has(index)){
-                        scheduleFinalTransition(char,index);
+                colorTransitionTimers.current.delete(index);
+            }, 150);
+            colorTransitionTimers.current.set(index, timer);
+        };
+
+        ScrollTrigger.create({
+            trigger: containerRef.current,
+            start: "top 85%",
+            end: "bottom 15%",
+            scrub: 0.5,
+            onUpdate: (self) => {
+                const progress = self.progress;
+                const totalChars = allChars.length;
+                const isScrollingDown = progress >= lastScrollProgress.current;
+                const currentCharIndex = Math.floor(progress * totalChars);
+
+                allChars.forEach((char, index) => {
+                    if (!isScrollingDown && index >= currentCharIndex) {
+                        // Resetting when scrolling back up
+                        if (colorTransitionTimers.current.has(index)) {
+                            clearTimeout(colorTransitionTimers.current.get(index));
+                            colorTransitionTimers.current.delete(index);
+                        }
+                        completedChars.current.delete(index);
+                        gsap.set(char, { color: colorInitial });
+                    } 
+                    else if (index <= currentCharIndex && !completedChars.current.has(index)) {
+                        gsap.set(char, { color: colorAccent });
+                        scheduleFinalTransition(char, index);
                     }
-                    else{
-                        gsap.set(char,{color:colorInitial})
-                    }
-                }
-                lastScrollProgress.current=progress;
-            });
-        },
-    });
-},
-    {
-        scope:containerRef;
-        dependencies:[colorInitial,colorAccent,colorFinal];
-    })
-    if(React.Children.count(children)==1){
-        return React.cloneElement(children,{ref:containerRef});
+                });
+                lastScrollProgress.current = progress;
+            },
+        });
+    }, { scope: containerRef, dependencies: [children] });
+
+    if (React.Children.count(children) === 1) {
+        return React.cloneElement(children, { ref: containerRef });
     }
-  return (
-    <div ref={containerRef} data-copy-wrappers="true">
-        {children}
-    </div>
-  )
+
+    return (
+        <div ref={containerRef} data-copy-wrapper="true">
+            {children}
+        </div>
+    );
 }
 
-export default AnimatedCopy
+export default AnimatedCopy;
