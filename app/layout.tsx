@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Menu from '@/components/menu/menu'
+import Chat from '@/components/chat/chat'
 import {
   Gravitas_One,
   Manrope,
@@ -46,6 +47,7 @@ export default function RootLayout({
       >
         <Menu/>
         {children}
+        <Chat/>
       </body>
     </html>
   );

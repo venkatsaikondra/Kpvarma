@@ -1,99 +1,110 @@
-import React, { useEffect } from 'react'
-import { useRef,useState } from 'react'
-import {motion,AnimatePresence} from 'framer-motion';
-import {useChat} from '@ai-sdk/react';
-import { handleBuildComplete } from 'next/dist/build/adapter/build-complete';
+"use client"
+import React, { useEffect, useRef, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion';
+import { useChat } from '@ai-sdk/react';
+import { MessageCircle, X, Send, Loader2, ArrowDownCircle } from 'lucide-react';
+import Styles from './chat.module.css';
 
-const chat = () => {
-    const [isChatOpen,setisChatOpen]=useState(false);
-    const [showChatIcon,setShowChatIcon]=useState(false);
-    const chatIconRef=useRef<HTMLButtonElement>(null);
-    const {messages,input,handleInputChange,handleSubmit,isLoading,stop,reload,error}=useChat({api:'/api/chatgpt'})
-    useEffect(()=>{
-        const haddleScroll=()=>{
-            if(window.scrollY>200){
+const Chat = () => {
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [showChatIcon, setShowChatIcon] = useState(false);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    
+    const { messages, input, handleInputChange, handleSubmit, isLoading, stop } = useChat({
+        api: '/api/gemini'
+    });
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 200) {
                 setShowChatIcon(true);
-            }
-            else{
+            } else {
                 setShowChatIcon(false);
-                setisChatOpen(false);
+                setIsChatOpen(false);
             }
-        }
-        handleScroll();
-        window.addEventListener("scroll",handleScroll);
-        return ()=>{
-            window.addEventListener("scroll",handleScroll)
-        }
-    },[])
-    const toggleChat=()=>{
-        setIsChatOpen(!isChatOpen);
-    }
-  return (
-    <div>
-      <AnimatePresence>
-        {
-            showChatIcon &&(<motion.div onClick={toggleChat}><button ref={chatIconRef} onClick={toggleChat} size="icon">
-                {!isChatOpen?(
-                    <MessageCircle>
+        };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
-                    </MessageCircle>
-                ):(
-                    <ArrowDownCircle></ArrowDownCircle>
+    // Auto-scroll to bottom
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+    }, [messages]);
+
+    const toggleChat = () => setIsChatOpen(!isChatOpen);
+
+    return (
+        <div className={Styles.chat_wrapper}>
+            <AnimatePresence>
+                {showChatIcon && (
+                    <motion.button
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0, opacity: 0 }}
+                        className={Styles.chat_trigger}
+                        onClick={toggleChat}
+                    >
+                        {isChatOpen ? <ArrowDownCircle /> : <MessageCircle />}
+                    </motion.button>
                 )}
-                </button></motion.div>)
-        }
-      </AnimatePresence>
-      <AnimatePresence>
-        {
-            isChatOpen && (
-                <motion.div>
-                    <card>
-                        <cardHeader>
-                            <cardTitle>
-                                Chat with Kpvarma
-                            </cardTitle>
-                            <button>
-                                onClick={toggleChat}
-                                <X></X>
-                                <span>Close Chat</span>
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {isChatOpen && (
+                    <motion.div 
+                        initial={{ y: 20, opacity: 0, scale: 0.95 }}
+                        animate={{ y: 0, opacity: 1, scale: 1 }}
+                        exit={{ y: 20, opacity: 0, scale: 0.95 }}
+                        className={Styles.chat_window}
+                    >
+                        <div className={Styles.chat_header}>
+                            <div>
+                                <h3 className={Styles.chat_title}>Chat with KPVARMA</h3>
+                                <span className={Styles.status_dot}>Online</span>
+                            </div>
+                            <button onClick={toggleChat} className={Styles.close_btn}>
+                                <X size={20} />
                             </button>
-                        </cardHeader>
-                        <cardContent>
-                            <scrollArea>
-                                {message?.length===0 &&(<div>
-                                    <h1>No messages yet</h1>
-                                </div>)}
-                                {
-                                    messages?.map(messages,index)==>{
-                                        <div key={index}>
-                                        </div>
-                                    }
-                                }
-                               {isLoading && (
-                                <div>
-                                    <Loader2>
-                                        <button onClick={()=>stop()}>
-                                            abort
-                                        </button>
-                                    </Loader2>
+                        </div>
+
+                        <div className={Styles.chat_content} ref={scrollRef}>
+                            {messages.length === 0 && (
+                                <div className={Styles.empty_state}>
+                                    <p>How can I help you today?</p>
                                 </div>
-                               )} 
-                            </scrollArea>
-                        </cardContent>
-                        <cardFooter>
-                            <form action="" onSubmit={handleSubmit}>
-                                <input value={input} onChange={handleInputChange} placeholder='Type your message here...'>
-                                <button type='submit' disabled={isLoading} size="icon"><Send></Send></button>
-                                </input>
-                            </form>
-                        </cardFooter>
-                    </card>
-                </motion.div>
-            )
-        }
-      </AnimatePresence>
-    </div>
-  )
+                            )}
+                            {messages.map((m) => (
+                                <div key={m.id} className={`${Styles.message_bubble} ${m.role === 'user' ? Styles.user : Styles.ai}`}>
+                                    {m.content}
+                                </div>
+                            ))}
+                            {isLoading && (
+                                <div className={Styles.loading_indicator}>
+                                    <Loader2 className={Styles.spinner} size={16} />
+                                    <button onClick={() => stop()} className={Styles.stop_btn}>Stop generating</button>
+                                </div>
+                            )}
+                        </div>
+
+                        <form onSubmit={handleSubmit} className={Styles.chat_footer}>
+                            <input 
+                                value={input} 
+                                onChange={handleInputChange} 
+                                placeholder='Ask me anything...' 
+                                className={Styles.chat_input}
+                            />
+                            <button type='submit' disabled={isLoading || !input} className={Styles.send_btn}>
+                                <Send size={18} />
+                            </button>
+                        </form>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    )
 }
 
-export default chat
+export default Chat;
