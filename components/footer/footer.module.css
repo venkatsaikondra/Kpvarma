@@ -3,22 +3,22 @@
   color: #ffffff;
   padding: 120px 5% 60px;
   position: relative;
-  overflow: hidden; /* Critical to prevent scrollbars during explosion */
+  overflow: hidden; 
   font-family: 'Inter', -apple-system, sans-serif;
 }
 
 .explosionContainer {
   position: absolute;
-  top: 50%; /* Explosion starts from the middle of the footer */
+  top: 50%; 
   left: 50%;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 1; /* Behind text, but visible */
+  z-index: 1;
 }
 
 .particleImg {
-  width: 150px; /* Fixed size ensures visibility */
+  width: 150px;
   height: 150px;
   object-fit: cover;
   border-radius: 12px;
@@ -34,7 +34,7 @@
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
-  z-index: 10; /* Keeps text above the flying images */
+  z-index: 10; 
 }
 
 .title {
