@@ -20,7 +20,6 @@ export default function Home() {
       <Parallax/>
     
       <Text/>
-      <Scroll/>
       <Footer/>
     </div>
   );
