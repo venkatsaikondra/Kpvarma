@@ -1,0 +1,7 @@
+footer h1{
+    text-transform: uppercase;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12vw;
+    font-weight: 500;
+    line-height: 0.85;
+}

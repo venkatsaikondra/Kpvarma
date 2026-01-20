@@ -18,8 +18,9 @@ export default function Home() {
       <Projects/>
       <Photography/>
       <Parallax/>
-      <Scroll/>
+    
       <Text/>
+      <Scroll/>
       <Footer/>
     </div>
   );

@@ -125,10 +125,6 @@ const ScrollComponent = () => {
             </div>
           </div>
         </section>
-
-        <section className={Styles.footer}>
-          <Link href="/about">Next Chapter: About Me</Link>
-        </section>
       </ReactLenis>
     </div>
   )
