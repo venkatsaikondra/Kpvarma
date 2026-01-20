@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger' // Import ScrollTrigger
 import { useGSAP } from '@gsap/react'
-import { useTheme } from 'next-themes'
+
 gsap.registerPlugin(ScrollTrigger); // Register the plugin
 
 const menuLinks = [
@@ -21,19 +21,11 @@ const Menu = () => {
     const container = useRef(null);
     const menuBar = useRef(null); // Ref for the top bar
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [mounted, setMounted] = useState(false);
-    const { theme, setTheme } = useTheme();
     const tl = useRef(null);
-
-    useEffect(() => setMounted(true), []);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
-
-    const toggleTheme = () => {
-        setTheme(theme === 'dark' ? 'light' : 'dark');
-    }
 
     // --- NEW: Scroll to Hide/Show Logic ---
     useGSAP(() => {

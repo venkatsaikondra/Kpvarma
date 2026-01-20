@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`
           ${gravitas.variable}
@@ -45,11 +45,8 @@ export default function RootLayout({
           ${playfair.variable}
         `}
       >
-        {/* The opening tag must go here, wrapping the Menu and Children */}
-          <Menu />
-          {children}
-       
-        
+        <Menu />
+        {children}
         <Chat />
       </body>
     </html>
