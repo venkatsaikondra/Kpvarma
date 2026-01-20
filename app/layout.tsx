@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ViewTransitions } from 'next-view-transitions';
 import "./globals.css";
 import Menu from '@/components/menu/menu';
 import Chat from '@/components/chat/chat';
@@ -47,9 +46,7 @@ export default function RootLayout({
         `}
       >
         {/* The opening tag must go here, wrapping the Menu and Children */}
-        <ViewTransitions>
           <Menu />
-        </ViewTransitions>
           {children}
        
         

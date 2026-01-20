@@ -38,7 +38,7 @@ const TextPage = () => {
             </section>
 
             <section className={`${Styles.section} ${Styles.banner_img}`}>
-                <img src="/potrait8.jpg" alt="Banner" />
+                <img className={Styles.text2} src="/text2.jpg" alt="Banner" />
             </section>
 
             <section className={`${Styles.section} ${Styles.services}`}>
@@ -55,7 +55,7 @@ const TextPage = () => {
                         </div>
                     </div>
                     <div className={Styles.col}>
-                        <img src="/potrait9.jpg" alt="Service" />
+                        <img src="/text3.jpg" alt="Service" />
                     </div>
                 </div>
                 {/* ... other services follow same pattern ... */}
