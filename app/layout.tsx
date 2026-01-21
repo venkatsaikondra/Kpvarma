@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Menu from '@/components/menu/menu';
 import Chat from '@/components/chat/chat';
+//import Counter from '@/components/counter/counter'
 import {
   Gravitas_One,
   Manrope,
@@ -30,7 +31,6 @@ export const metadata: Metadata = {
   title: "KP Varma | Portfolio",
   description: "Developer & Photographer",
 };
-
 export default function RootLayout({
   children,
 }: {
@@ -45,6 +45,8 @@ export default function RootLayout({
           ${playfair.variable}
         `}
       >
+        {/* Loading Counter sits on top */}
+        
         <Menu />
         {children}
         <Chat />
