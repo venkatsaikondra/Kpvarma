@@ -1,5 +1,5 @@
 import { streamText, Message } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
+//import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { initialMessage } from "@/lib/data";
 
 const google = createGoogleGenerativeAI({
