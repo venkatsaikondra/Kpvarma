@@ -1,15 +1,19 @@
 "use client"
 import React, { useEffect, useRef } from 'react'
 import gsap from "gsap";
-import { ReactLenis } from "lenis/react"
+// Import LenisRef for proper typing
+import { ReactLenis, LenisRef } from "lenis/react"
 import AnimatedCopy from '@/components/text/AnimatedCopy';
 import Styles from '@/components/text/text.module.css'
 
 const TextPage = () => {
-    const lenisRef = useRef();
+    // 1. Initialize with null and add the LenisRef type
+    const lenisRef = useRef<LenisRef>(null);
     
     useEffect(() => {
-        function update(time) {
+        // 2. Type the time parameter as a number
+        function update(time: number) {
+            // Using the Ref properly with the typed interface
             lenisRef.current?.lenis?.raf(time * 1000);
         }
         gsap.ticker.add(update);
@@ -18,6 +22,7 @@ const TextPage = () => {
 
     return (
         <div className={Styles.container}>
+            {/* ReactLenis with the typed ref */}
             <ReactLenis root options={{ autoRaf: false }} ref={lenisRef} />
             
             <section className={`${Styles.section} ${Styles.hero}`}>
@@ -42,7 +47,6 @@ const TextPage = () => {
             </section>
 
             <section className={`${Styles.section} ${Styles.services}`}>
-                {/* Example of one service block - Repeat for others */}
                 <div className={Styles.service}>
                     <div className={Styles.col}>
                         <div className={Styles.service_copy}>
@@ -58,7 +62,6 @@ const TextPage = () => {
                         <img src="/text3.jpg" alt="Service" />
                     </div>
                 </div>
-                {/* ... other services follow same pattern ... */}
             </section>
 
             <section className={`${Styles.section} ${Styles.outro}`}>

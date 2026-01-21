@@ -10,12 +10,19 @@ import styles from "@/components/projects/project.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// FIXED: Added inline style for backgroundColor so the cards are not transparent
-const Card = ({ title, copy, index, color }) => (
+// 1. Define the Interface for Props
+interface CardProps {
+  title: string;
+  copy: string;
+  index: number;
+  color: string;
+}
+
+const Card = ({ title, copy, index, color }: CardProps) => (
   <div className={styles.card} id={`card-${index + 1}`} data-card={index + 1}>
     <div 
       className={styles.card_inner} 
-      style={{ backgroundColor: color }} // <-- THIS FIXES THE VISUAL BUG
+      style={{ backgroundColor: color }}
     >
       <div className={styles.card_content}>
         <h2>{title}</h2>
@@ -23,7 +30,7 @@ const Card = ({ title, copy, index, color }) => (
       </div>
       <div className={styles.card_img}>
         <Image
-          src={`/card-${index + 1}.jpg`} // Ensure these images exist in /public
+          src={`/card-${index + 1}.jpg`}
           alt={title}
           fill
           sizes="(max-width: 768px) 100vw, 350px"
@@ -35,25 +42,20 @@ const Card = ({ title, copy, index, color }) => (
 );
 
 export default function Projects() {
-  const container = useRef(null);
-  const introRef = useRef(null);
-  const outroRef = useRef(null);
+  // 2. Type the Refs
+  const container = useRef<HTMLDivElement>(null);
+  const outroRef = useRef<HTMLElement>(null);
 
   useGSAP(() => {
     if (!container.current) return;
 
-    // Use a more robust selector for CSS modules
-    const cards = gsap.utils.toArray(`.${styles.card}`);
+    const cards = gsap.utils.toArray<HTMLElement>(`.${styles.card}`);
     
-    // --- Cards Stacking Animation ---
     cards.forEach((card, index) => {
-      const cardInner = card.querySelector(`.${styles.card_inner}`);
-      
-      // We don't pin the last card because nothing comes after it to cover it
-      // but we still want it to participate in the flow.
+      const cardInner = card.querySelector(`.${styles.card_inner}`) as HTMLElement;
       const isLastCard = index === cards.length - 1;
 
-      // 1. Entrance Animation (Fade in from bottom)
+      // 1. Entrance Animation
       gsap.from(card, {
         y: 100,
         opacity: 0,
@@ -61,7 +63,7 @@ export default function Projects() {
         ease: "power3.out",
         scrollTrigger: {
           trigger: card,
-          start: "top 90%", // Trigger slightly earlier
+          start: "top 90%",
           toggleActions: "play none none reverse",
         },
       });
@@ -70,25 +72,17 @@ export default function Projects() {
       if (!isLastCard && cardInner) {
         ScrollTrigger.create({
           trigger: card,
-          // Start pinning when the card top hits 25% down the viewport (adjust as needed)
           start: "top 25%", 
-          // Pin until the whole section is scrolled; this calculation ensures 
-          // the card stays pinned while the next ones scroll over it.
           endTrigger: `.${styles.cards}`,
           end: "bottom bottom", 
           pin: true,
-          pinSpacing: false, // Essential for the "stacking" effect
+          pinSpacing: false,
           scrub: true,
-          
-          // Optional: Add a slight scale down effect to create depth 
-          // as new cards slide over
           onUpdate: (self) => {
-             // As the user scrolls past this card, push it back slightly (scale down)
-             // to give the illusion that the next card is sliding ON TOP.
              const progress = self.progress;
              gsap.to(cardInner, {
-               scale: 1 - (progress * 0.05), // Scale down slightly
-               filter: `brightness(${1 - (progress * 0.2)})`, // Darken slightly
+               scale: 1 - (progress * 0.05),
+               filter: `brightness(${1 - (progress * 0.2)})`,
                overwrite: true,
                ease: "power1.out"
              });
@@ -100,7 +94,7 @@ export default function Projects() {
     return () => ScrollTrigger.getAll().forEach((st) => st.kill());
   }, { scope: container });
 
-  const cards = [
+  const cardData = [
     { title: "Brand Foundation", copy: "The heart of your company's story, built to resonate and endure.", color: "#e8d5ff" },
     { title: "Design Identity", copy: "Crafting visual systems that communicate with precision and elegance.", color: "#f8f9fa" },
     { title: "Digital Presence", copy: "Building engaging brand touchpoints that convert and captivate.", color: "#fff3cd" },
@@ -110,15 +104,12 @@ export default function Projects() {
   return (
     <ReactLenis root>
       <div className={styles.app} ref={container}>
-
-        {/* Cards Section */}
         <section className={styles.cards}>
-          {cards.map((card, i) => (
+          {cardData.map((card, i) => (
             <Card key={i} {...card} index={i} />
           ))}
         </section>
 
-        {/* Outro Section */}
         <section className={styles.outro} ref={outroRef}>
           <h2>Let&apos;s build a brand that leaves a mark.</h2>
         </section>

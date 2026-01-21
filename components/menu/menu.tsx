@@ -3,10 +3,10 @@ import React, { useState, useRef, useEffect } from 'react'
 import Styles from './menu.module.css'
 import Link from 'next/link'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger' // Import ScrollTrigger
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 
-gsap.registerPlugin(ScrollTrigger); // Register the plugin
+gsap.registerPlugin(ScrollTrigger);
 
 const menuLinks = [
     { path: '/', label: "Home" },
@@ -18,16 +18,17 @@ const menuLinks = [
 ]
 
 const Menu = () => {
-    const container = useRef(null);
-    const menuBar = useRef(null); // Ref for the top bar
+    const container = useRef<HTMLDivElement>(null);
+    const menuBar = useRef<HTMLDivElement>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const tl = useRef(null);
+    
+    // 1. Ref typed correctly
+    const tl = useRef<gsap.core.Timeline | null>(null);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
-    // --- NEW: Scroll to Hide/Show Logic ---
     useGSAP(() => {
         const showAnim = gsap.from(menuBar.current, { 
             yPercent: -100,
@@ -40,13 +41,11 @@ const Menu = () => {
             start: "top top",
             end: "max",
             onUpdate: (self) => {
-                // If scrolling down, hide; if up, show
                 self.direction === 1 ? showAnim.reverse() : showAnim.play();
             }
         });
     }, { scope: container });
 
-    // --- Existing Menu Overlay Logic ---
     useGSAP(() => {
         gsap.set(`.${Styles.menu_link_item_holder}`, { y: "100%" });
         tl.current = gsap.timeline({ paused: true });
@@ -66,17 +65,17 @@ const Menu = () => {
             });
     }, { scope: container });
 
+    // 2. Safely accessing the ref with optional chaining
     useEffect(() => {
         if (isMenuOpen) {
-            tl.current.play();
+            tl.current?.play();
         } else {
-            tl.current.reverse();
+            tl.current?.reverse();
         }
     }, [isMenuOpen]);
 
     return (
         <div className={Styles.menu_container} ref={container}>
-            {/* Added ref={menuBar} here */}
             <div className={Styles.menu_bar} ref={menuBar}>
                 <div className={Styles.menu_logo}>
                     <Link href="/"><h1>KPVARMA</h1></Link>
@@ -126,4 +125,4 @@ const Menu = () => {
     )
 }
 
-export default Menu
+export default Menu;

@@ -7,12 +7,33 @@ import { useGSAP } from '@gsap/react'
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-const AnimatedCopy = ({ children, colorInitial = '#444444', colorAccent = '#abff02', colorFinal = '#ffffff' }) => {
-    const containerRef = useRef(null);
-    const splitRefs = useRef([]);
-    const lastScrollProgress = useRef(0);
-    const colorTransitionTimers = useRef(new Map());
-    const completedChars = useRef(new Set());
+// 1. Define types for the component props
+interface AnimatedCopyProps {
+    children: React.ReactNode;
+    colorInitial?: string;
+    colorAccent?: string;
+    colorFinal?: string;
+}
+
+// 2. Define types for the SplitText tracking
+interface SplitInstance {
+    wordSplit: SplitText;
+    charSplit: SplitText;
+}
+
+const AnimatedCopy = ({ 
+    children, 
+    colorInitial = '#444444', 
+    colorAccent = '#abff02', 
+    colorFinal = '#ffffff' 
+}: AnimatedCopyProps) => {
+    
+    // 3. Properly type the refs
+    const containerRef = useRef<HTMLDivElement>(null);
+    const splitRefs = useRef<SplitInstance[]>([]);
+    const lastScrollProgress = useRef<number>(0);
+    const colorTransitionTimers = useRef<Map<number, NodeJS.Timeout>>(new Map());
+    const completedChars = useRef<Set<number>>(new Set());
 
     useGSAP(() => {
         if (!containerRef.current) return;
@@ -27,8 +48,8 @@ const AnimatedCopy = ({ children, colorInitial = '#444444', colorAccent = '#abff
         completedChars.current.clear();
 
         const elements = containerRef.current.hasAttribute("data-copy-wrapper")
-            ? Array.from(containerRef.current.children)
-            : [containerRef.current];
+            ? Array.from(containerRef.current.children) as HTMLElement[]
+            : [containerRef.current as HTMLElement];
 
         elements.forEach((element) => {
             const wordSplit = new SplitText(element, { type: "words", wordsClass: "word" });
@@ -39,23 +60,25 @@ const AnimatedCopy = ({ children, colorInitial = '#444444', colorAccent = '#abff
         const allChars = splitRefs.current.flatMap(({ charSplit }) => charSplit.chars);
         gsap.set(allChars, { color: colorInitial });
 
-        const scheduleFinalTransition = (char, index) => {
-            if (colorTransitionTimers.current.has(index)) return;
+       const scheduleFinalTransition = (char: HTMLElement, index: number) => {
+    if (colorTransitionTimers.current.has(index)) return;
 
-            const timer = setTimeout(() => {
-                if (!completedChars.current.has(index)) {
-                    gsap.to(char, {
-                        duration: 0.4,
-                        color: colorFinal,
-                        ease: "power2.out",
-                        onComplete: () => completedChars.current.add(index)
-                    });
+    const timer = setTimeout(() => {
+        if (!completedChars.current.has(index)) {
+            gsap.to(char, {
+                duration: 0.4,
+                color: colorFinal,
+                ease: "power2.out",
+                // Explicitly return void by using braces
+                onComplete: () => { 
+                    completedChars.current.add(index); 
                 }
-                colorTransitionTimers.current.delete(index);
-            }, 150);
-            colorTransitionTimers.current.set(index, timer);
-        };
-
+            });
+        }
+        colorTransitionTimers.current.delete(index);
+    }, 150);
+    colorTransitionTimers.current.set(index, timer);
+};
         ScrollTrigger.create({
             trigger: containerRef.current,
             start: "top 85%",
@@ -69,9 +92,9 @@ const AnimatedCopy = ({ children, colorInitial = '#444444', colorAccent = '#abff
 
                 allChars.forEach((char, index) => {
                     if (!isScrollingDown && index >= currentCharIndex) {
-                        // Resetting when scrolling back up
-                        if (colorTransitionTimers.current.has(index)) {
-                            clearTimeout(colorTransitionTimers.current.get(index));
+                        const activeTimer = colorTransitionTimers.current.get(index);
+                        if (activeTimer) {
+                            clearTimeout(activeTimer);
                             colorTransitionTimers.current.delete(index);
                         }
                         completedChars.current.delete(index);
@@ -79,7 +102,7 @@ const AnimatedCopy = ({ children, colorInitial = '#444444', colorAccent = '#abff
                     } 
                     else if (index <= currentCharIndex && !completedChars.current.has(index)) {
                         gsap.set(char, { color: colorAccent });
-                        scheduleFinalTransition(char, index);
+                        scheduleFinalTransition(char as HTMLElement, index);
                     }
                 });
                 lastScrollProgress.current = progress;
@@ -87,8 +110,11 @@ const AnimatedCopy = ({ children, colorInitial = '#444444', colorAccent = '#abff
         });
     }, { scope: containerRef, dependencies: [children] });
 
-    if (React.Children.count(children) === 1) {
-        return React.cloneElement(children, { ref: containerRef });
+    // Handle single child VS multiple children
+    if (React.Children.count(children) === 1 && React.isValidElement(children)) {
+        return React.cloneElement(children as React.ReactElement<any>, { 
+            ref: containerRef 
+        });
     }
 
     return (

@@ -1,4 +1,4 @@
-import { streamText, Message } from "ai";
+/*import { streamText, UIMessage } from "ai";
 //import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { initialMessage } from "@/lib/data";
 
@@ -33,4 +33,5 @@ export async function POST(request: Request) {
     });
 
     return result.toDataStreamResponse();
-}
+}*/
+export {};

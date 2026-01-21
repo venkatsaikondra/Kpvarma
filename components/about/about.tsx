@@ -9,11 +9,12 @@ import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function About() {
-  const container = useRef(null);
-  const leftCol = useRef(null);
-  const rightCol = useRef(null);
-  const image1 = useRef(null);
-  const image2 = useRef(null);
+  // Specify the type within the angle brackets < >
+const container = useRef<HTMLDivElement>(null);
+const leftCol = useRef<HTMLDivElement>(null);
+const rightCol = useRef<HTMLUListElement>(null); // rightCol is a <ul>
+const image1 = useRef<HTMLDivElement>(null);
+const image2 = useRef<HTMLDivElement>(null);
 
  useGSAP(() => {
     // 1. Text and Points Reveal
