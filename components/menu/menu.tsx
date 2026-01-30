@@ -79,7 +79,7 @@ const Menu = () => {
             {/* --- HOMEPAGE BAR --- */}
             <div className={Styles.menu_bar} ref={menuBar}>
                 <div className={Styles.menu_logo}>
-                    <Link href="/"><h1>KPVARMA</h1></Link>
+                    <Link href="/"><h1>PIXCRAFT</h1></Link>
                 </div>
                 
                 <div className={Styles.menu_controls}>
@@ -96,7 +96,7 @@ const Menu = () => {
             <div className={Styles.menu_overlay}>
                 <div className={Styles.menu_overlay_bar}>
                     <div className={Styles.menu_logo}>
-                        <h1>KPVARMA</h1>
+                        <h1>PIXCRAFT</h1>
                     </div>
 
                     <div className={Styles.resume_wrapper} ref={resumeOverlayRef}>

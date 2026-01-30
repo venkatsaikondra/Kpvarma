@@ -92,7 +92,7 @@ const First = () => {
 
           <h1 className={styles.name}>
             <span className={styles.lineMask}>
-              <span className="line">PRAVEEN</span>
+              <span className="line">Venkat Sai</span>
             </span>
             <span className={styles.lineMask}>
               <span className="line">KONDRA</span>
@@ -108,8 +108,8 @@ const First = () => {
         <div className={styles.right}>
           <div className={`${styles.imageMask} image-mask-target`}>
             <Image
-              src="/kpvarma.jpg"
-              alt="Praveen Kondra"
+              src="/pixcraft.jpg"
+              alt="Venkat Sai Kondra"
               width={500}
               height={700}
               className={`${styles.imageScale} image-scale-target`}

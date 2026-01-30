@@ -98,7 +98,7 @@ const Chat = () => {
                     >
                         <div className={Styles.chat_header}>
                             <div>
-                                <h3 className={Styles.chat_title}>Chat with KPVARMA</h3>
+                                <h3 className={Styles.chat_title}>Chat with PIXCRAFT</h3>
                                 <span className={Styles.status_dot}>Offline</span>
                             </div>
                             <button onClick={toggleChat} className={Styles.close_btn}>
