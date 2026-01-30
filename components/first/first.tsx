@@ -108,7 +108,7 @@ const First = () => {
         <div className={styles.right}>
           <div className={`${styles.imageMask} image-mask-target`}>
             <Image
-              src="/pixcraft.jpg"
+              src="/pixcraft.png"
               alt="Venkat Sai Kondra"
               width={500}
               height={700}
